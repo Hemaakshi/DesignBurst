@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Signup</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <div class="container">
+        <div class="form-container">
+            <h1 class="title">Welcome</h1>
+
+            <div class="toggle-container">
+                <button class="toggle-btn active" onclick="showLogin()">Login</button>
+                <button class="toggle-btn" onclick="showSignup()">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="form active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <input type="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+                <div class="forgot-password">
+                    <a href="#" onclick="alert('Password reset functionality would be implemented here!')">Forgot
+                        Password?</a>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signupForm" class="form">
+                <form onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <input type="text" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="Confirm Password" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Sign Up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLogin() {
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('signupForm').classList.remove('active');
+            document.querySelectorAll('.toggle-btn')[0].classList.add('active');
+            document.querySelectorAll('.toggle-btn')[1].classList.remove('active');
+        }
+
+        function showSignup() {
+            document.getElementById('signupForm').classList.add('active');
+            document.getElementById('loginForm').classList.remove('active');
+            document.querySelectorAll('.toggle-btn')[1].classList.add('active');
+            document.querySelectorAll('.toggle-btn')[0].classList.remove('active');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = event.target.querySelector('input[type="email"]').value;
+            const password = event.target.querySelector('input[type="password"]').value;
+
+            // Here you would typically send the data to your server
+            alert(`Login attempted with:\nEmail: ${email}\nPassword: ${password}\n\n(This is just a demo - implement actual authentication!)`);
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const name = event.target.querySelector('input[placeholder="Full Name"]').value;
+            const email = event.target.querySelector('input[type="email"]').value;
+            const password = event.target.querySelector('input[placeholder="Password"]').value;
+            const confirmPassword = event.target.querySelector('input[placeholder="Confirm Password"]').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            // Here you would typically send the data to your server
+            alert(`Signup attempted with:\nName: ${name}\nEmail: ${email}\nPassword: ${password}\n\n(This is just a demo - implement actual registration!)`);
+        }
+
+        // Add some interactive effects
+        document.addEventListener('mousemove', (e) => {
+            const container = document.querySelector('.container');
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+
+            container.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            document.querySelector('.container').style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        });
+    </script>
+</body>
+
+</html>
