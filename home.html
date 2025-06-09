@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PosterCraft - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, 
+                rgba(255, 107, 107, 0.08) 0%,
+                rgba(255, 142, 83, 0.06) 15%,
+                rgba(162, 155, 254, 0.08) 35%,
+                rgba(116, 185, 255, 0.06) 50%,
+                rgba(162, 155, 254, 0.08) 65%,
+                rgba(255, 107, 181, 0.06) 85%,
+                rgba(255, 230, 109, 0.05) 100%);
+            min-height: 100vh;
+            position: relative;
+            color: #2d3748;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 15% 85%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 85% 15%, rgba(162, 155, 254, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(116, 185, 255, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 20px 0;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff6b6b, #a29bfe, #74b9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(162, 155, 254, 0.1);
+            color: #6c5ce7;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #a29bfe, #74b9ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid rgba(162, 155, 254, 0.6);
+            color: #6c5ce7;
+        }
+
+        .btn-outline:hover {
+            background: rgba(162, 155, 254, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #a29bfe, #74b9ff);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(162, 155, 254, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .welcome-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(45deg, #ff6b6b, #a29bfe, #74b9ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            color: #718096;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .quick-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .action-btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #a29bfe);
+            color: white;
+            border: none;
+        }
+
+        .action-btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
+            color: #4a5568;
+            border: 2px solid rgba(162, 155, 254, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #ff6b6b, #a29bfe, #74b9ff);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .card-icon.templates {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e83);
+        }
+
+        .card-icon.projects {
+            background: linear-gradient(45deg, #a29bfe, #74b9ff);
+        }
+
+        .card-icon.analytics {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+        }
+
+        .card-icon.tools {
+            background: linear-gradient(45deg, #00b894, #00cec9);
+        }
+
+        .card-content {
+            color: #718096;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 16px;
+            background: rgba(162, 155, 254, 0.05);
+            border-radius: 12px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .card-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-btn-primary {
+            background: linear-gradient(45deg, #a29bfe, #74b9ff);
+            color: white;
+        }
+
+        .card-btn-secondary {
+            background: rgba(162, 155, 254, 0.1);
+            color: #6c5ce7;
+            border: 1px solid rgba(162, 155, 254, 0.3);
+        }
+
+        .card-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(162, 155, 254, 0.2);
+        }
+
+        /* Recent Projects */
+        .recent-projects {
+            display: grid;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .project-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project-item:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateX(4px);
+        }
+
+        .project-thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #ff6b6b, #a29bfe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .project-info {
+            flex: 1;
+        }
+
+        .project-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .project-meta {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .project-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-draft {
+            background: rgba(255, 193, 7, 0.2);
+            color: #b7791f;
+        }
+
+        .status-published {
+            background: rgba(40, 167, 69, 0.2);
+            color: #155724;
+        }
+
+        /* Templates Gallery */
+        .templates-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .template-card {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-card:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-4px);
+        }
+
+        .template-preview {
+            width: 100%;
+            height: 120px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: 600;
+        }
+
+        .template-preview.business {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .template-preview.event {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+        }
+
+        .template-preview.social {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        }
+
+        .template-preview.education {
+            background: linear-gradient(45deg, #43e97b, #38f9d7);
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-center {
+                order: 1;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .dashboard-card {
+                padding: 20px;
+            }
+
+            .templates-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">DesignBurst</div>
+                <div class="nav-center">
+                    <a href="#" class="nav-link active">Dashboard</a>
+                    <a href="#" class="nav-link">Templates</a>
+                    <a href="#" class="nav-link">My Projects</a>
+                    <a href="#" class="nav-link">Analytics</a>
+                </div>
+                <div class="nav-right">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <span class="user-name" id="userName">User</span>
+                    </div>
+                    <button class="btn btn-outline" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h1 class="welcome-title">Welcome Back!</h1>
+                <p class="welcome-subtitle">Ready to create your next masterpiece? Let's bring your ideas to life with our powerful design tools.</p>
+                
+                <div class="quick-actions">
+                    <button class="action-btn action-btn-primary" onclick="createNew()">
+                        ✨ Create New Poster
+                    </button>
+                    <a href="#" class="action-btn action-btn-secondary">
+                        📋 Browse Templates
+                    </a>
+                    <a href="#" class="action-btn action-btn-secondary">
+                        📁 My Projects
+                    </a>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Recent Projects Card -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon projects">📁</div>
+                            Recent Projects
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Continue working on your latest designs and bring them to completion.
+                    </div>
+                    
+                    <div class="recent-projects">
+                        <div class="project-item" onclick="openProject('summer-event')">
+                            <div class="project-thumbnail">SE</div>
+                            <div class="project-info">
+                                <div class="project-name">Summer Event Poster</div>
+                                <div class="project-meta">Modified 2 hours ago</div>
+                            </div>
+                            <div class="project-status status-draft">Draft</div>
+                        </div>
+                        <div class="project-item" onclick="openProject('business-flyer')">
+                            <div class="project-thumbnail">BF</div>
+                            <div class="project-info">
+                                <div class="project-name">Business Flyer</div>
+                                <div class="project-meta">Modified yesterday</div>
+                            </div>
+                            <div class="project-status status-published">Published</div>
+                        </div>
+                        <div class="project-item" onclick="openProject('concert-poster')">
+                            <div class="project-thumbnail">CP</div>
+                            <div class="project-info">
+                                <div class="project-name">Concert Poster</div>
+                                <div class="project-meta">Modified 3 days ago</div>
+                            </div>
+                            <div class="project-status status-draft">Draft</div>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="card-btn card-btn-primary" onclick="viewAllProjects()">
+                            View All Projects
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Popular Templates Card -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon templates">🎨</div>
+                            Popular Templates
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Start with professionally designed templates and customize them to your needs.
+                    </div>
+
+                    <div class="templates-gallery">
+                        <div class="template-card" onclick="useTemplate('business')">
+                            <div class="template-preview business">B</div>
+                            <div class="template-name">Business</div>
+                        </div>
+                        <div class="template-card" onclick="useTemplate('event')">
+                            <div class="template-preview event">E</div>
+                            <div class="template-name">Event</div>
+                        </div>
+                        <div class="template-card" onclick="useTemplate('social')">
+                            <div class="template-preview social">S</div>
+                            <div class="template-name">Social Media</div>
+                        </div>
+                        <div class="template-card" onclick="useTemplate('education')">
+                            <div class="template-preview education">Ed</div>
+                            <div class="template-name">Education</div>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="card-btn card-btn-primary" onclick="browseTemplates()">
+                            Browse All Templates
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Analytics Card -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon analytics">📊</div>
+                            Your Stats
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Track your creative progress and see how your designs are performing.
+                    </div>
+
+                    <div class="card-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Projects</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">8</div>
+                            <div class="stat-label">Published</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">1.2K</div>
+                            <div class="stat-label">Views</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">94</div>
+                            <div class="stat-label">Downloads</div>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="card-btn card-btn-secondary" onclick="viewAnalytics()">
+                            📈 View Analytics
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Tools Card -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <div class="card-icon tools">🛠️</div>
+                            Quick Tools
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Access powerful design tools and utilities to enhance your creative workflow.
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="card-btn card-btn-primary" onclick="openTool('color-palette')">
+                            🎨 Color Palette
+                        </button>
+                        <button class="card-btn card-btn-secondary" onclick="openTool('font-pairs')">
+                            📝 Font Pairs
+                        </button>
+                        <button class="card-btn card-btn-secondary" onclick="openTool('image-editor')">
+                            🖼️ Image Editor
+                        </button>
+                        <button class="card-btn card-btn-secondary" onclick="openTool('brand-kit')">
+                            🏷️ Brand Kit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize user data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            if (sessionStorage.getItem('userLoggedIn') !== 'true') {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Load user data
+            const userName = sessionStorage.getItem('userName') || sessionStorage.getItem('userEmail') || 'User';
+            const userEmail = sessionStorage.getItem('userEmail') || '';
+            
+            // Update UI with user data
+            document.getElementById('userName').textContent = userName.split(' ')[0];
+            document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
+
+            // Add welcome animation
+            animateWelcome();
+        });
+
+        function animateWelcome() {
+            const cards = document.querySelectorAll('.dashboard-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        }
+
+        // Navigation functions
+        function createNew() {
+            alert('Opening poster creator...');
+            // In a real app, this would navigate to the poster editor
+        }
+
+        function openProject(projectId) {
+            alert(`Opening project: ${projectId}`);
+            // In a real app, this would load the specific project in the editor
+        }
+
+        function viewAllProjects() {
+            alert('Navigating to projects page...');
+            // In a real app, this would navigate to the projects page
+        }
+
+        function useTemplate(templateType) {
+            alert(`Creating new poster with ${templateType} template...`);
+            // In a real app, this would open the editor with the selected template
+        }
+
+        function browseTemplates() {
+            alert('Opening templates gallery...');
+            // In a real app, this would navigate to the templates page
+        }
+
+        function viewAnalytics() {
+            alert('Opening analytics dashboard...');
+            // In a real app, this would navigate to the analytics page
+        }
+
+        function openTool(toolName) {
+            alert(`Opening ${toolName} tool...`);
+            // In a real app, this would open the specific tool
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear session storage
+                sessionStorage.removeItem('userLoggedIn');
+                sessionStorage.removeItem('userEmail');
+                sessionStorage.removeItem('userName');
+                
+                // Redirect to login page
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Add smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Remove active class from all links
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // In a real app, you would handle navigation here
+                alert(`Navigating to ${this.textContent} section...`);
+            });
+        });
+    </script>
+</body>
+</html>
